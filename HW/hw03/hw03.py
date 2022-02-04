@@ -127,6 +127,15 @@ def get_next_coin(coin):
         return 25
 
 
+def descending_coin(coin):
+    if coin == 25:
+        return 10
+    elif coin == 10:
+        return 5
+    elif coin == 5:
+        return 1
+
+
 def count_coins(change):
     """Return the number of ways to make change using coins of value of 1, 5, 10, 25.
     >>> count_coins(15)
@@ -142,7 +151,24 @@ def count_coins(change):
     >>> check(HW_SOURCE_FILE, 'count_coins', ['While', 'For'])                                          
     True
     """
-    "*** YOUR CODE HERE ***"
+
+    def count_inner(change, max_coin=25):
+        if change < 0:
+            return 0
+        if change == 0:
+            return 1
+        if change < max_coin:
+            return count_inner(change, descending_coin(max_coin))
+        if change == 1:
+            if max_coin != 1:
+                return 0
+            else:
+                return 1
+        if max_coin == 1:
+            return 1
+        return count_inner(change - max_coin, max_coin) + count_inner(change, descending_coin(max_coin))
+
+    return count_inner(change)
 
 
 from operator import sub, mul
