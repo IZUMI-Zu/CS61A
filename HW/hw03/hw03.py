@@ -152,21 +152,21 @@ def count_coins(change):
     True
     """
 
-    def count_inner(change, max_coin=25):
-        if change < 0:
+    def count_inner(char, max_coin=25):
+        if char < 0:
             return 0
-        if change == 0:
+        if char == 0:
             return 1
-        if change < max_coin:
-            return count_inner(change, descending_coin(max_coin))
-        if change == 1:
+        if char < max_coin:
+            return count_inner(char, descending_coin(max_coin))
+        if char == 1:
             if max_coin != 1:
                 return 0
             else:
                 return 1
         if max_coin == 1:
             return 1
-        return count_inner(change - max_coin, max_coin) + count_inner(change, descending_coin(max_coin))
+        return count_inner(char - max_coin, max_coin) + count_inner(char, descending_coin(max_coin))
 
     return count_inner(change)
 
