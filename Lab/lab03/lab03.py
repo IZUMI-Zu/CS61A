@@ -1,3 +1,5 @@
+from math import factorial
+
 HW_SOURCE_FILE = __file__
 
 
@@ -19,7 +21,7 @@ def summation(n, term):
     True
     """
     assert n >= 1
-    "*** YOUR CODE HERE ***"
+    return term(1) if n == 1 else summation(n - 1, term) + term(n)
 
 
 def pascal(row, column):
@@ -34,14 +36,22 @@ def pascal(row, column):
     >>> pascal(4, 2)     # Row 4 (1 4 6 4 1), Column 2
     6
     """
-    "*** YOUR CODE HERE ***"
+    if row < column:
+        return 0
+    else:
+        return factorial(row) // (factorial(row - column) * factorial(column))
 
 
 def compose1(f, g):
     """"Return a function h, such that h(x) = f(g(x))."""
+
     def h(x):
         return f(g(x))
+
     return h
+
+
+identity = lambda x: x
 
 
 def repeated(f, n):
@@ -65,4 +75,7 @@ def repeated(f, n):
     ...       ['For', 'While'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    if n == 0:
+        return identity
+    else:
+        return compose1(f, repeated(f, n - 1))
