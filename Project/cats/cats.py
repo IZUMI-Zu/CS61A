@@ -1,4 +1,5 @@
 """Typing test implementation"""
+import sys
 
 from utils import lower, split, remove_punctuation, lines_from_file
 from ucb import main, interact, trace
@@ -54,6 +55,7 @@ def about(topic):
     'Nice pup.'
     """
     assert all([lower(x) == x for x in topic]), 'topics should be lowercase.'
+
     # BEGIN PROBLEM 2
 
     def func(para):
@@ -149,7 +151,14 @@ def autocorrect(typed_word, valid_words, diff_function, limit):
     'testing'
     """
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    if typed_word in valid_words:
+        return typed_word
+    similar_word = min(valid_words, key=lambda w: diff_function(typed_word, w, limit))
+    # the key is a compare func
+    if diff_function(typed_word, similar_word, limit) > limit:
+        return typed_word
+    else:
+        return similar_word
     # END PROBLEM 5
 
 
