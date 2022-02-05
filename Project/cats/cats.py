@@ -30,7 +30,13 @@ def choose(paragraphs, select, k):
     ''
     """
     # BEGIN PROBLEM 1
-    "*** YOUR CODE HERE ***"
+    count = -1
+    for p in paragraphs:
+        if select(p):
+            count += 1
+            if count == k:
+                return p
+    return ""
     # END PROBLEM 1
 
 
@@ -49,7 +55,16 @@ def about(topic):
     """
     assert all([lower(x) == x for x in topic]), 'topics should be lowercase.'
     # BEGIN PROBLEM 2
-    "*** YOUR CODE HERE ***"
+
+    def func(para):
+        find = split(lower(remove_punctuation(para)))
+        for top in find:
+            for cc in topic:
+                if top == cc:
+                    return True
+        return False
+
+    return func
     # END PROBLEM 2
 
 
@@ -79,7 +94,17 @@ def accuracy(typed, reference):
     typed_words = split(typed)
     reference_words = split(reference)
     # BEGIN PROBLEM 3
-    "*** YOUR CODE HERE ***"
+    if typed_words == [] and reference_words == []:
+        return 100.0
+    elif (not typed_words == [] and reference_words == []) or (typed_words == [] and not reference_words == []):
+        return 0.0
+    else:
+        count = len(typed_words)
+        count_not = 0
+        for x, y in zip(typed_words, reference_words):
+            if x == y:
+                count_not += 1
+        return 100 * count_not / count
     # END PROBLEM 3
 
 
@@ -97,7 +122,7 @@ def wpm(typed, elapsed):
     """
     assert elapsed > 0, 'Elapsed time must be positive'
     # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
+    return (len(typed) / 5) / (elapsed / 60)
     # END PROBLEM 4
 
 
@@ -280,7 +305,7 @@ def fastest_words(game):
     [['have', 'fun'], ['Just']]
     """
     player_indices = range(len(all_times(game)))  # contains an *index* for each player
-    word_indices = range(len(all_words(game)))    # contains an *index* for each word
+    word_indices = range(len(all_words(game)))  # contains an *index* for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
     # END PROBLEM 10
@@ -324,6 +349,7 @@ def game_string(game):
 
 
 enable_multiplayer = False  # Change to True when you're ready to race.
+
 
 ##########################
 # Command Line Interface #

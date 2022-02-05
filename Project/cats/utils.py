@@ -3,11 +3,11 @@
 import string
 from math import sqrt
 
+
 def lines_from_file(path):
     """Return a list of strings, one for each line in a file."""
     with open(path, 'r') as f:
         return [line.strip() for line in f.readlines()]
-
 
 
 def remove_punctuation(s):
@@ -34,64 +34,68 @@ def split(s):
     """
     return s.split()
 
+
 #########################################
 # Functions relating to keyboard layout #
 #########################################
 
-KEY_LAYOUT = [["1","2","3","4","5","6","7","8","9","0","-","="],
-              ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p","[","]"],
-			  ["a", "s", "d", "f", "g", "h", "j", "k", "l",";","'"],
-			  ["z", "x", "c", "v", "b", "n", "m",",",".","/"],
+KEY_LAYOUT = [["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "="],
+              ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"],
+              ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'"],
+              ["z", "x", "c", "v", "b", "n", "m", ",", ".", "/"],
               [" "]]
 
+
 def distance(p1, p2):
-	"""Return the Euclidean distance between two points
+    """Return the Euclidean distance between two points
 
-	The Euclidean distance between two points, (x1, y1) and (x2, y2)
-	is the square root of (x1 - x2) ** 2 + (y1 - y2) ** 2
+    The Euclidean distance between two points, (x1, y1) and (x2, y2)
+    is the square root of (x1 - x2) ** 2 + (y1 - y2) ** 2
 
-	>>> distance((0, 1), (1, 1))
-	1.0
-	>>> distance((1, 1), (1, 1))
-	0.0
-	>>> round(distance((4, 0), (0, 4)), 3)
-	5.657
-	"""
-	return sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
+    >>> distance((0, 1), (1, 1))
+    1.0
+    >>> distance((1, 1), (1, 1))
+    0.0
+    >>> round(distance((4, 0), (0, 4)), 3)
+    5.657
+    """
+    return sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
+
 
 def get_key_distances():
-	"""Return a new dictionary mapping key pairs to distances.
+    """Return a new dictionary mapping key pairs to distances.
 
-	Each key of the dictionary is a tuple of two
-	letters as strings, and each value is the euclidean distance
-	between the two letters on a standard QWERTY keyboard, normalized
+    Each key of the dictionary is a tuple of two
+    letters as strings, and each value is the euclidean distance
+    between the two letters on a standard QWERTY keyboard, normalized
 
-	The scaling is constant, so a pair of keys that are twice
-	as far have a distance value that is twice as great
+    The scaling is constant, so a pair of keys that are twice
+    as far have a distance value that is twice as great
 
-	>>> distances = get_key_distances()
-	>>> distances["a", "a"]
-	0.0
-	>>> round(distances["a", "d"],3)
-	1.367
-	>>> round(distances["d", "a"],3)
-	1.367
-	"""
-	key_distance = {}
+    >>> distances = get_key_distances()
+    >>> distances["a", "a"]
+    0.0
+    >>> round(distances["a", "d"],3)
+    1.367
+    >>> round(distances["d", "a"],3)
+    1.367
+    """
+    key_distance = {}
 
-	def compute_pairwise_distances(i, j, d):
-		for x in range(len(KEY_LAYOUT)):
-			for y in range(len(KEY_LAYOUT[x])):
-				l1 = KEY_LAYOUT[i][j]
-				l2 = KEY_LAYOUT[x][y]
-				d[l1, l2] = distance((i, j), (x, y))
+    def compute_pairwise_distances(i, j, d):
+        for x in range(len(KEY_LAYOUT)):
+            for y in range(len(KEY_LAYOUT[x])):
+                l1 = KEY_LAYOUT[i][j]
+                l2 = KEY_LAYOUT[x][y]
+                d[l1, l2] = distance((i, j), (x, y))
 
-	for i in range(len(KEY_LAYOUT)):
-		for j in range(len(KEY_LAYOUT[i])):
-			compute_pairwise_distances(i, j, key_distance)
+    for i in range(len(KEY_LAYOUT)):
+        for j in range(len(KEY_LAYOUT[i])):
+            compute_pairwise_distances(i, j, key_distance)
 
-	max_value = max(key_distance.values())
-	return {key : value * 8 / max_value for key, value in key_distance.items()}
+    max_value = max(key_distance.values())
+    return {key: value * 8 / max_value for key, value in key_distance.items()}
+
 
 def count(f):
     """Keeps track of the number of times a function f is called using the
@@ -107,8 +111,10 @@ def count(f):
     >>> factorial.call_count
     5
     """
+
     def counted(*args):
         counted.call_count += 1
         return f(*args)
+
     counted.call_count = 0
     return counted
