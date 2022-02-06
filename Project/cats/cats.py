@@ -185,7 +185,17 @@ def sphinx_switches(start, goal, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    if len(start) == 0:
+        return len(goal)
+    if len(goal) == 0:
+        return len(start)
+    elif start == goal:
+        return 0
+    elif limit == 0:
+        return 1
+    else:
+        return 1 + sphinx_switches(start[1:], goal[1:], limit - 1) if goal[0] != start[0] \
+            else sphinx_switches(start[1:], goal[1:], limit)
     # END PROBLEM 6
 
 
@@ -206,24 +216,25 @@ def pawssible_patches(start, goal, limit):
     >>> pawssible_patches("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-
-    if ______________:  # Fill in the condition
+    if limit < 0:
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return 0
         # END
-
-    elif ___________:  # Feel free to remove or add additional cases
+    elif len(start) == 0 or len(goal) == 0:
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return len(start) + len(goal)
         # END
-
+    elif start[0] == goal[0]:
+        return pawssible_patches(start[1:], goal[1:], limit)
     else:
-        add = ...  # Fill in these lines
-        remove = ...
-        substitute = ...
+        add_diff = pawssible_patches(start, goal[1:], limit - 1)
+        remove_diff = pawssible_patches(start[1:], goal, limit - 1)
+        substitute_diff = pawssible_patches(start[1:], goal[1:], limit - 1)
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return 1 + min(add_diff, remove_diff, substitute_diff)
         # END
 
 
@@ -265,7 +276,16 @@ def report_progress(typed, prompt, user_id, send):
     0.2
     """
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    count = 0
+    for x, y in zip(typed, prompt):
+        if x == y:
+            count += 1
+        else:
+            break
+    progress = count / len(prompt)
+    dic = {'id': user_id, 'progress': progress}
+    send(dic)
+    return progress
     # END PROBLEM 8
 
 
@@ -298,7 +318,11 @@ def time_per_word(times_per_player, words):
     [[6, 3, 6, 2], [10, 6, 1, 2]]
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    lis = [[] for x in range(len(times_per_player))]
+    for x in range(len(times_per_player)):
+        for y in range(1, len(times_per_player[0])):
+            lis[x].append(times_per_player[x][y] - times_per_player[x][y - 1])
+    return game(words, lis)
     # END PROBLEM 9
 
 
@@ -316,7 +340,7 @@ def fastest_words(game):
     player_indices = range(len(all_times(game)))  # contains an *index* for each player
     word_indices = range(len(all_words(game)))  # contains an *index* for each word
     # BEGIN PROBLEM 10
-    "*** YOUR CODE HERE ***"
+
     # END PROBLEM 10
 
 
