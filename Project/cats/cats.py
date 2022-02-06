@@ -340,7 +340,16 @@ def fastest_words(game):
     player_indices = range(len(all_times(game)))  # contains an *index* for each player
     word_indices = range(len(all_words(game)))  # contains an *index* for each word
     # BEGIN PROBLEM 10
-
+    lis = [[] for x in player_indices]
+    for x in word_indices:
+        t_min = 33989
+        for y in player_indices:
+            t_min = min(t_min, time(game, y, x))
+        for y in player_indices:
+            if t_min == time(game, y, x):
+                lis[y].append(word_at(game, x))
+                break
+    return lis
     # END PROBLEM 10
 
 
