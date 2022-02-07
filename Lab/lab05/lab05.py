@@ -11,7 +11,10 @@ def couple(s, t):
     [['c', 's'], [6, '1']]
     """
     assert len(s) == len(t)
-    "*** YOUR CODE HERE ***"
+    lis = []
+    for x, y in zip(s, t):
+        lis.append([x, y])
+    return lis
 
 
 from math import sqrt
@@ -28,7 +31,8 @@ def distance(city_a, city_b):
     >>> distance(city_c, city_d)
     5.0
     """
-    "*** YOUR CODE HERE ***"
+    return sqrt((get_lat(city_a) - get_lat(city_b)) ** 2 +
+                (get_lon(city_a) - get_lon(city_b)) ** 2)
 
 
 def closer_city(lat, lon, city_a, city_b):
@@ -46,7 +50,9 @@ def closer_city(lat, lon, city_a, city_b):
     >>> closer_city(41.29, 174.78, bucharest, vienna)
     'Bucharest'
     """
-    "*** YOUR CODE HERE ***"
+    temp = make_city('temp', lat, lon)
+    return get_name(city_a) if distance(temp, city_a) <= distance(temp, city_b) \
+        else get_name(city_b)
 
 
 def check_city_abstraction():
@@ -151,7 +157,13 @@ def berry_finder(t):
     >>> berry_finder(t)
     True
     """
-    "*** YOUR CODE HERE ***"
+    if label(t) == 'berry':
+        return True
+    else:
+        for _ in branches(t):
+            if berry_finder(_):
+                return True
+    return False
 
 
 def sprout_leaves(t, leaves):
@@ -187,7 +199,11 @@ def sprout_leaves(t, leaves):
           1
           2
     """
-    "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return tree(label(t), [tree(x) for x in leaves])
+    else:
+        return tree(label(t), [sprout_leaves(branch, leaves) for branch in branches(t)])
+
 
 # Abstraction tests for sprout_leaves and berry_finder
 
@@ -352,6 +368,7 @@ def shakespeare_tokens(path='shakespeare.txt', url='http://composingprograms.com
     else:
         shakespeare = urlopen(url)
         return shakespeare.read().decode(encoding='ascii').split()
+
 
 # Uncomment the following two lines
 # tokens = shakespeare_tokens()
