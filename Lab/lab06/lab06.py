@@ -15,7 +15,14 @@ def insert_items(lst, entry, elem):
     >>> large_lst3 is large_lst
     True
     """
-    "*** YOUR CODE HERE ***"
+    x = 0
+    while x < len(lst):
+        if lst[x] == entry:
+            lst.insert(x + 1, elem)
+            x += 2
+        else:
+            x += 1
+    return lst
 
 
 def naturals():
@@ -47,7 +54,9 @@ def scale(it, multiplier):
     >>> [next(m) for _ in range(5)]
     [2, 4, 6, 8, 10]
     """
-    "*** YOUR CODE HERE ***"
+    for x in it:
+        x *= multiplier
+        yield x
 
 
 def hailstone(n):
@@ -64,4 +73,18 @@ def hailstone(n):
     2
     1
     """
-    "*** YOUR CODE HERE ***"
+    if n == 1:
+        yield n
+    elif n % 2 == 0:
+        yield n
+        yield from hailstone(n // 2)
+    else:
+        yield n
+        yield from hailstone(3 * n + 1)
+    # while n != 1:
+    #     yield n
+    #     if n % 2 == 0:
+    #         n //= 2
+    #     else:
+    #         n = 3 * n + 1
+    # yield 1
