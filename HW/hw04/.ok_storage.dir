@@ -1,1 +1,4 @@
 'total_weight-correct', (0, 66)
+'replace_thor_at_leaf-correct', (512, 66)
+'has_path-correct', (1024, 66)
+'preorder-correct', (1536, 66)

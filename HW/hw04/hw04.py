@@ -153,7 +153,11 @@ def totals_tree(m):
     >>> check(HW_SOURCE_FILE, 'totals_tree', ['Index'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    if is_planet(m):
+        return tree(size(m))
+    else:
+        l, r = end(left(m)), end(right(m))
+        return tree(total_weight(m), [totals_tree(l), totals_tree(r)])
 
 
 def replace_thor_at_leaf(t, thors_replacement):
@@ -185,7 +189,10 @@ def replace_thor_at_leaf(t, thors_replacement):
     >>> laerad == yggdrasil # Make sure original tree is unmodified
     True
     """
-    "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return tree(label(t)) if label(t) != 'thor' else tree(thors_replacement)
+    else:
+        return tree(label(t), [replace_thor_at_leaf(bar, thors_replacement) for bar in branches(t)])
 
 
 def has_path(t, word):
@@ -219,7 +226,9 @@ def has_path(t, word):
     False
     """
     assert len(word) > 0, 'no path for empty word.'
-    "*** YOUR CODE HERE ***"
+    if len(word) == 1:
+        return word[0] == label(t)
+    return label(t) == word[0] and any([has_path(b, word[1:]) for b in branches(t)])
 
 
 def preorder(t):
@@ -232,7 +241,7 @@ def preorder(t):
     >>> preorder(tree(2, [tree(4, [tree(6)])]))
     [2, 4, 6]
     """
-    "*** YOUR CODE HERE ***"
+    return [label(t)] + sum([preorder(x) for x in branches(t)], [])
 
 
 def interval(a, b):
