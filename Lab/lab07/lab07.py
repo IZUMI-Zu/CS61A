@@ -13,7 +13,6 @@ def convert_link(link):
         return [link.first] + convert_link(link.rest)
 
 
-
 def cumulative_mul(t):
     """Mutates t so that each node's label becomes the product of all labels in
     the corresponding subtree rooted at t.
@@ -31,7 +30,6 @@ def cumulative_mul(t):
     for b in t.branches:
         cumu_mul *= b.label
     t.label = cumu_mul
-
 
 
 def has_cycle(link):
@@ -176,4 +174,5 @@ class Tree:
             for b in t.branches:
                 tree_str += print_tree(b, indent + 1)
             return tree_str
+
         return print_tree(self).rstrip()
