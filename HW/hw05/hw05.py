@@ -88,7 +88,13 @@ def store_digits(n):
     >>> cleaned = re.sub(r"#.*\\n", '', re.sub(r'"{3}[\s\S]*?"{3}', '', inspect.getsource(store_digits)))
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
-    "*** YOUR CODE HERE ***"
+    def helper(lst, n):
+        if n == 0:
+            return lst
+        lst = Link(n % 10, lst) 
+        return helper(lst, n//10)
+    ans = Link(n % 10, Link.empty)
+    return helper(ans, n//10)
 
 
 def path_yielder(t, value):
@@ -128,10 +134,13 @@ def path_yielder(t, value):
 
     "*** YOUR CODE HERE ***"
 
-    for _______________ in _________________:
-        for _______________ in _________________:
-
-            "*** YOUR CODE HERE ***"
+    if t.label == value:
+        yield [value]
+    for b in t.branches:
+        for path in path_yielder(b, value):
+            yield [t.label] + path
+    
+    "*** YOUR CODE HERE ***"
 
 
 class Mint:
