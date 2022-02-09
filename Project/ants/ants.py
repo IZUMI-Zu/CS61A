@@ -57,6 +57,7 @@ class Insect:
     """An Insect, the base class of Ant and Bee, has health and a Place."""
 
     damage = 0
+    is_watersafe = False
 
     # ADD CLASS ATTRIBUTES HERE
 
@@ -116,6 +117,8 @@ class Ant(Insect):
     def __init__(self, health=1):
         """Create an Insect with a HEALTH quantity."""
         super().__init__(health)
+        # added
+        self.buffed = False
 
     def is_container(self):
         return False
@@ -157,7 +160,9 @@ class Ant(Insect):
     def buff(self):
         """Double this ants's damage, if it has not already been buffed."""
         # BEGIN Problem EC
-        "*** YOUR CODE HERE ***"
+        if not self.buffed:
+            self.damage *= 2
+            self.buffed = True
         # END Problem EC
 
 
@@ -411,7 +416,7 @@ class TankAnt(ContainerAnt):
     food_cost = 6
     implemented = True
     damage = 1
-    
+
     def __init__(self, health=2):
         super().__init__(health)
 
@@ -419,6 +424,7 @@ class TankAnt(ContainerAnt):
         for bee in self.place.bees.copy():
             Insect.reduce_health(bee, self.damage)
         super().action(gamestate)
+
 
 # END Problem 9
 
@@ -430,18 +436,28 @@ class Water(Place):
         """Add an Insect to this place. If the insect is not watersafe, reduce
         its health to 0."""
         # BEGIN Problem 10
-        "*** YOUR CODE HERE ***"
+        super().add_insect(insect)
+        if not insect.is_watersafe:
+            insect.reduce_health(insect.health)
         # END Problem 10
 
 
 # BEGIN Problem 11
 # The ScubaThrower class
+class ScubaThrower(ThrowerAnt):
+    name = 'Scuba'
+    food_cost = 6
+    is_watersafe = True
+    # OVERRIDE CLASS ATTRIBUTES HERE
+    implemented = True  # Change to True to view in the GUI
+
+
 # END Problem 11
 
 # BEGIN Problem EC
 
 
-class QueenAnt(Ant):  # You should change this line
+class QueenAnt(ScubaThrower):  # You should change this line
     # END Problem EC
     """The Queen of the colony. The game is over if a bee enters her place."""
 
@@ -449,13 +465,20 @@ class QueenAnt(Ant):  # You should change this line
     food_cost = 7
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem EC
-    implemented = False  # Change to True to view in the GUI
+    implemented = True  # Change to True to view in the GUI
+    is_true = False
 
     # END Problem EC
 
     def __init__(self, health=1):
         # BEGIN Problem EC
-        "*** YOUR CODE HERE ***"
+        super().__init__(health)
+        if QueenAnt.is_true:
+            self.impostor = True
+        else:
+            self.impostor = False
+            QueenAnt.is_true = True
+
         # END Problem EC
 
     def action(self, gamestate):
@@ -465,7 +488,19 @@ class QueenAnt(Ant):  # You should change this line
         Impostor queens do only one thing: reduce their own health to 0.
         """
         # BEGIN Problem EC
-        "*** YOUR CODE HERE ***"
+        if self.impostor:
+            Ant.reduce_health(self, self.health)
+        else:
+            super().action(gamestate)
+            curr_place = self.place.exit
+            while curr_place is not None:
+                if curr_place.ant and not curr_place.ant.buffed:
+                    curr_place.ant.buff()
+                if isinstance(curr_place.ant, ContainerAnt) \
+                        and curr_place.ant.contained_ant \
+                        and not curr_place.ant.contained_ant.buffed:
+                    curr_place.ant.contained_ant.buff()
+                curr_place = curr_place.exit
         # END Problem EC
 
     def reduce_health(self, amount):
@@ -473,8 +508,16 @@ class QueenAnt(Ant):  # You should change this line
         remaining, signal the end of the game.
         """
         # BEGIN Problem EC
-        "*** YOUR CODE HERE ***"
+        Ant.reduce_health(self, amount)
+        if self.health <= 0 and not self.impostor:
+            bees_win()
         # END Problem EC
+
+    def remove_from(self, place):
+        if not self.impostor:
+            return
+        else:
+            super().remove_from(place)
 
 
 class AntRemover(Ant):
@@ -492,6 +535,7 @@ class Bee(Insect):
 
     name = 'Bee'
     damage = 1
+    is_watersafe = True
 
     # OVERRIDE CLASS ATTRIBUTES HERE
 
