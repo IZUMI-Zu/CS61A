@@ -7,8 +7,13 @@ def insert_into_all(item, nested_list):
     >>> insert_into_all(0, nl)
     [[0], [0, 1, 2], [0, 3]]
     """
-    "*** YOUR CODE HERE ***"
-
+    list = [[] for x in nested_list]
+    count = 0
+    for x in nested_list:
+        list[count].append(item)
+        list[count].extend(x)
+        count += 1
+    return list
 
 def subseqs(s):
     """Return a nested list (a list of lists) of all subsequences of S.
@@ -20,10 +25,10 @@ def subseqs(s):
     >>> subseqs([])
     [[]]
     """
-    if ________________:
-        ________________
+    if len(s) == 0:
+        return insert_into_all([], [])
     else:
-        ________________
+        insert_into_all()
         ________________
 
 
