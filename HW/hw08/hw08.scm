@@ -1,5 +1,10 @@
 (define (accumulate-tail combiner start n term)
-  'YOUR-CODE-HERE)
+  (if (< n 1)
+      start
+      (accumulate-tail combiner
+                       (combiner start (term n))
+                       (- n 1)
+                       term)))
 
 (define (cadr s) (car (cdr s)))
 
@@ -71,9 +76,17 @@
 
 (define (second-operand p) (caddr p))
 
-(define (derive-sum expr var) 'YOUR-CODE-HERE)
+(define (derive-sum expr var)
+  (make-sum (derive (first-operand expr) var)
+            (derive (second-operand expr) var)))
 
-(define (derive-product expr var) 'YOUR-CODE-HERE)
+(define (derive-product expr var)
+  'YOUR-CODE-HERE
+  (make-sum
+   (make-product (derive (first-operand expr) var)
+                 (second-operand expr))
+   (make-product (first-operand expr)
+                 (derive (second-operand expr) var))))
 
 ; Exponentiations are represented as lists that start with ^.
 (define (make-exp base exponent) 'YOUR-CODE-HERE)
