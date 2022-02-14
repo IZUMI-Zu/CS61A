@@ -22,6 +22,7 @@ from ucb import main, trace, interact
 from scheme_tokens import tokenize_lines, DELIMITERS
 from buffer import Buffer, InputReader, LineReader
 
+
 # Pairs and Scheme lists
 
 class Pair:
@@ -35,6 +36,7 @@ class Pair:
     >>> print(s.map(lambda x: x+4))
     (5 6)
     """
+
     def __init__(self, first, rest):
         from scheme_builtins import scheme_valid_cdrp, SchemeError
         self.first = first
@@ -103,7 +105,10 @@ class nil:
     def flatmap(self, fn):
         return self
 
-nil = nil() # Assignment hides the nil class; there is only one instance
+
+nil = nil()  # Assignment hides the nil class; there is only one instance
+
+
 # Scheme list parser
 def scheme_read(src):
     """Read the next expression from SRC, a Buffer of tokens.
@@ -119,23 +124,25 @@ def scheme_read(src):
     """
     if src.current() is None:
         raise EOFError
-    val = src.pop_first() # Get and remove the first token
+    val = src.pop_first()  # Get and remove the first token
     if val == 'nil':
         # BEGIN PROBLEM 1
-        "*** YOUR CODE HERE ***"
+        return nil
         # END PROBLEM 1
     elif val == '(':
         # BEGIN PROBLEM 1
-        "*** YOUR CODE HERE ***"
+        return read_tail(src)
         # END PROBLEM 1
     elif val == "'":
         # BEGIN PROBLEM 6
         "*** YOUR CODE HERE ***"
+        return Pair('quote', Pair(scheme_read(src), nil))
         # END PROBLEM 6
     elif val not in DELIMITERS:
         return val
     else:
         raise SyntaxError('unexpected token: {0}'.format(val))
+
 
 def read_tail(src):
     """Return the remainder of a list in SRC, starting before an element or ).
@@ -150,7 +157,8 @@ def read_tail(src):
             raise SyntaxError('unexpected end of file')
         elif src.current() == ')':
             # BEGIN PROBLEM 1
-            "*** YOUR CODE HERE ***"
+            src.pop_first()
+            return nil
             # END PROBLEM 1
         elif src.current() == '.':
             src.pop_first()
@@ -163,6 +171,9 @@ def read_tail(src):
         else:
             # BEGIN PROBLEM 1
             "*** YOUR CODE HERE ***"
+            first = scheme_read(src)
+            second = read_tail(src)
+            return Pair(first, second)
             # END PROBLEM 1
     except EOFError:
         raise SyntaxError('unexpected end of file')
@@ -173,6 +184,7 @@ def buffer_input(prompt='scm> '):
     """Return a Buffer instance containing interactive input."""
     return Buffer(tokenize_lines(InputReader(prompt)))
 
+
 def buffer_lines(lines, prompt='scm> ', show_prompt=False):
     """Return a Buffer instance iterating through LINES."""
     if show_prompt:
@@ -181,6 +193,7 @@ def buffer_lines(lines, prompt='scm> ', show_prompt=False):
         input_lines = LineReader(lines, prompt)
     return Buffer(tokenize_lines(input_lines))
 
+
 def read_line(line):
     """Read a single string LINE as a Scheme expression."""
     buf = Buffer(tokenize_lines([line]))
@@ -188,6 +201,7 @@ def read_line(line):
     if buf.more_on_line:
         raise SyntaxError("read_line's argument can only be a single element, but received multiple")
     return result
+
 
 def repl_str(val):
     """Should largely match str(val), except for booleans and undefined."""
@@ -200,6 +214,7 @@ def repl_str(val):
     if isinstance(val, str) and val and val[0] == "\"":
         return "\"" + repr(val[1:-1])[1:-1] + "\""
     return str(val)
+
 
 # Interactive loop
 def read_print_loop():
@@ -219,6 +234,7 @@ def read_print_loop():
         except (KeyboardInterrupt, EOFError):  # <Control>-D, etc.
             print()
             return
+
 
 @main
 def main(*args):
