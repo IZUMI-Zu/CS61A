@@ -18,6 +18,14 @@ def prune_min(t):
     Tree(6, [Tree(3, [Tree(1)])])
     """
     "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        return
+    if t.branches[0].label < t.branches[1].label:
+        t.branches = [t.branches[0]]
+    else:
+        t.branches = [t.branches[1]]
+    prune_min(t.branches[0])
+
 
 
 def num_splits(s, d):
